@@ -49,7 +49,7 @@ class _MyCodeFieldState extends State<MyCodeField> {
       ),
       modifiers: [
         const IndentModifier(),
-        const CurlyBracketModifier(),
+        ...bracketModifiers,
       ],
     );
   }
@@ -69,21 +69,5 @@ class _MyCodeFieldState extends State<MyCodeField> {
         controller: controller,
       ),
     );
-  }
-}
-
-class CurlyBracketModifier extends CodeModifier {
-  const CurlyBracketModifier() : super('{');
-
-  @override
-  TextEditingValue? updateString(
-      String text, TextSelection sel, EditorParams params) {
-    final newString = TextEditingValue(
-      text: '$text{}',
-      selection: TextSelection.fromPosition(
-        TextPosition(offset: text.length + 1),
-      ),
-    );
-    return newString;
   }
 }

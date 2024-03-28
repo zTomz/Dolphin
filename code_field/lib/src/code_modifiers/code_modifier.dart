@@ -8,14 +8,21 @@ abstract class CodeModifier {
   const CodeModifier(this.char);
 
   // Helper to insert [str] in [text] between [start] and [end]
-  TextEditingValue replace(String text, int start, int end, String str) {
+  TextEditingValue replace(
+    String text,
+    int start,
+    int end,
+    String str, {
+    TextSelection? selection,
+  }) {
     final len = str.length;
     return TextEditingValue(
       text: text.replaceRange(start, end, str),
-      selection: TextSelection(
-        baseOffset: start + len,
-        extentOffset: start + len,
-      ),
+      selection: selection ??
+          TextSelection(
+            baseOffset: start + len,
+            extentOffset: start + len,
+          ),
     );
   }
 
