@@ -1,0 +1,23 @@
+name: dolphin_code_field
+description: A customizable code field supporting syntax highlighting, bi-directionnal scrolling and code modifiers
+version: 1.1.1
+homepage: https://github.com/BertrandBev/code_field
+
+environment:
+  sdk: '>=3.3.2 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  linked_scroll_controller: ^0.2.0
+  highlight: ^0.7.0
+  flutter_highlight: ^0.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
