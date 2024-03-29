@@ -44,6 +44,8 @@ class WorkspaceProvider extends ChangeNotifier {
     _directory.list().listen((event) {
       _files.add(event);
 
+      _sortFileSystemEntities();
+
       notifyListeners();
     });
 
@@ -53,5 +55,21 @@ class WorkspaceProvider extends ChangeNotifier {
         print(event);
       },
     );
+  }
+
+  void _sortFileSystemEntities() {
+    _files.sort((a, b) {
+      if (a.path.startsWith('.') && !b.path.startsWith('.')) {
+        return -1; // Hidden folders before everything
+      } else if (a is Directory && b is File) {
+        return -1; // Folders before files
+      } else if (a is File && b is Directory) {
+        return 1; // Files after folders
+      } else {
+        return a.path
+            .toLowerCase()
+            .compareTo(b.path.toLowerCase()); // Sort by path alphabetically
+      }
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dolphin_app/pages/editor_page.dart';
 import 'package:dolphin_app/provider/workspace_provider.dart';
+import 'package:dolphin_app/theme/color_schemes.dart';
 import 'package:dolphin_code_field/code_text_field.dart';
 import 'package:flutter_highlight/themes/monokai.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +26,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       home: const CodeTheme(
         data: CodeThemeData(
           styles: monokaiTheme,

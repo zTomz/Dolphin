@@ -1,4 +1,7 @@
+import 'package:dolphin_app/extensions/file_system_entity_extension.dart';
+import 'package:dolphin_app/extensions/theme_extension.dart';
 import 'package:dolphin_app/provider/workspace_provider.dart';
+import 'package:dolphin_app/theme/app_spacing.dart';
 import 'package:dolphin_code_field/code_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:highlight/languages/dart.dart';
@@ -47,11 +50,52 @@ class _EditorPageState extends State<EditorPage> {
         children: [
           Container(
             width: workspaceProvider.sideMenuWidth,
-            color: Colors.red,
+            color: context.colorScheme.surface,
+            padding: const EdgeInsets.all(AppSpacing.small),
             child: ListView.builder(
               itemCount: workspaceProvider.files.length,
               itemBuilder: (context, index) {
-                return Text(workspaceProvider.files[index].path);
+                final entity = workspaceProvider.files[index];
+
+                return MaterialButton(
+                  onPressed: () {
+                    // TODO: Handle open a file or folder
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 30,
+                        child: entity.isDirectory
+                            ? const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 18,
+                              )
+                            : null,
+                      ),
+                      SizedBox(
+                        width: 30,
+                        child: entity.isDirectory
+                            ? const Icon(
+                                Icons.folder_rounded,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.description_rounded,
+                                size: 18,
+                              ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          entity.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: context.colorScheme.onSecondaryContainer,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ),
@@ -65,7 +109,7 @@ class _EditorPageState extends State<EditorPage> {
               },
               child: Container(
                 width: 3,
-                color: Colors.black,
+                color: context.colorScheme.surface,
               ),
             ),
           ),
