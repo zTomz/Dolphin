@@ -1,10 +1,21 @@
+import 'package:dolphin_app/pages/editor_page.dart';
+import 'package:dolphin_app/provider/workspace_provider.dart';
 import 'package:dolphin_code_field/code_text_field.dart';
 import 'package:flutter_highlight/themes/monokai.dart';
-import 'package:highlight/languages/dart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => WorkspaceProvider(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,52 +33,7 @@ class MyApp extends StatelessWidget {
         data: CodeThemeData(
           styles: monokaiTheme,
         ),
-        child: MyCodeField(),
-      ),
-    );
-  }
-}
-
-class MyCodeField extends StatefulWidget {
-  const MyCodeField({super.key});
-
-  @override
-  State<MyCodeField> createState() => _MyCodeFieldState();
-}
-
-class _MyCodeFieldState extends State<MyCodeField> {
-  late final CodeController controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = CodeController(
-      language: dart,
-      params: const EditorParams(
-        tabSpaces: 4,
-      ),
-      modifiers: [
-        const IndentModifier(),
-        const EnterBracketModifier(),
-        ...bracketModifiers,
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: CodeField(
-        expands: true,
-        controller: controller,
+        child: EditorPage(),
       ),
     );
   }
