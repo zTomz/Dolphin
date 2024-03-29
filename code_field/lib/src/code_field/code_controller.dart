@@ -48,7 +48,7 @@ class CodeController extends TextEditingController {
 
   /* Computed members */
   String _languageId = '';
-  final _modifierMap = <String, CodeModifier>{};
+  final _modifierMap = <String, List<CodeModifier>>{};
   final _styleList = <TextStyle>[];
   RegExp? _styleRegExp;
 
@@ -72,7 +72,7 @@ class CodeController extends TextEditingController {
 
     // Create modifier map
     for (final el in modifiers) {
-      _modifierMap[el.char] = el;
+      _modifierMap[el.char] = [..._modifierMap[el.char] ?? [], el];
     }
 
     // Build styleRegExp
@@ -188,10 +188,15 @@ class CodeController extends TextEditingController {
 
     if (loc != null) {
       final char = newValue.text[loc];
-      final modifier = _modifierMap[char];
-      final val = modifier?.updateString(super.text, selection, params);
+      final modifiers = _modifierMap[char];
 
-      if (val != null) {
+      for (final CodeModifier modifier in modifiers ?? []) {
+        final val = modifier.updateString(super.text, selection, params);
+
+        if (val == null) {
+          continue;
+        }
+
         // Update newValue
         newValue = newValue.copyWith(
           text: val.text,

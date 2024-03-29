@@ -49,6 +49,7 @@ class _MyCodeFieldState extends State<MyCodeField> {
       ),
       modifiers: [
         const IndentModifier(),
+        const EnterBracketModifier(),
         ...bracketModifiers,
       ],
     );

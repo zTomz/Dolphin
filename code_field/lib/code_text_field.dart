@@ -6,6 +6,7 @@ export 'src/code_field/editor_params.dart';
 export 'src/code_modifiers/bracket_modifer.dart';
 export 'src/code_modifiers/close_block_code_modifier.dart';
 export 'src/code_modifiers/code_modifier.dart';
+export 'src/code_modifiers/enter_bracket_modifer.dart';
 export 'src/code_modifiers/indent_code_modifier.dart';
 export 'src/code_modifiers/tab_code_modifier.dart';
 
