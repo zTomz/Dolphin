@@ -2,8 +2,9 @@ import 'package:dolphin_app/extensions/file_system_entity_extension.dart';
 import 'package:dolphin_app/extensions/theme_extension.dart';
 import 'package:dolphin_app/provider/workspace_provider.dart';
 import 'package:dolphin_app/theme/app_spacing.dart';
-import 'package:dolphin_code_field/code_text_field.dart';
+// import 'package:dolphin_code_field/code_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:highlight/languages/dart.dart';
 import 'package:provider/provider.dart';
 
@@ -26,11 +27,11 @@ class _EditorPageState extends State<EditorPage> {
       params: const EditorParams(
         tabSpaces: 4,
       ),
-      modifiers: [
-        const IndentModifier(),
-        const EnterBracketModifier(),
-        ...bracketModifiers,
-      ],
+      // modifiers: [
+      //   const IndentModifier(),
+      //   const EnterBracketModifier(),
+      //   ...bracketModifiers,
+      // ],
     );
   }
 
@@ -109,14 +110,14 @@ class _EditorPageState extends State<EditorPage> {
               },
               child: Container(
                 width: 3,
-                color: context.colorScheme.surface,
+                color: context.colorScheme.secondaryContainer,
               ),
             ),
           ),
           Expanded(
             child: CodeField(
-              expands: true,
               controller: controller,
+              expands: true,
             ),
           ),
         ],

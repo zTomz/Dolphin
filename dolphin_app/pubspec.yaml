@@ -31,8 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  dolphin_code_field:
-    path: ../code_field
+  dolphin_code_editor:
+    path: ../dolphin_code_editor
     
   highlight: ^0.7.0
   flutter_highlight: ^0.7.0
