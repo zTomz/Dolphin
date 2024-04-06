@@ -11,6 +11,16 @@ class WorkspaceProvider extends ChangeNotifier {
   double _sideMenuWidth = 300;
   double get sideMenuWidth => _sideMenuWidth;
 
+  bool _palletOpen = false;
+  bool get palletOpen => _palletOpen;
+
+  /// This automatically closes the command pallet if the file menu is open
+  set palletOpen(bool value) {
+    _palletOpen = value;
+
+    notifyListeners();
+  }
+
   Directory _directory = Directory.current;
   Directory get directory => _directory;
 
@@ -18,6 +28,14 @@ class WorkspaceProvider extends ChangeNotifier {
 
   List<FileSystemEntity> _files = [];
   List<FileSystemEntity> get files => _files;
+
+  File? _selectedFile;
+  File? get selectedFile => _selectedFile;
+  void setSelectedFile(File newFile) {
+    _selectedFile = newFile;
+
+    notifyListeners();
+  }
 
   /// Change the side menu width by the given offset
   void updateSideMenuWidth(double offset, BuildContext context) {
@@ -52,7 +70,25 @@ class WorkspaceProvider extends ChangeNotifier {
     // Listen to changes
     _directorySubscription = _directory.watch(recursive: true).listen(
       (event) {
-        print(event);
+        if (event is FileSystemCreateEvent) {
+          if (event.isDirectory) {
+            files.add(
+              Directory(event.path),
+            );
+          } else {
+            files.add(
+              File(event.path),
+            );
+          }
+
+          notifyListeners();
+        }
+
+        if (event is FileSystemDeleteEvent) {
+          files.removeWhere((element) => element.path == event.path);
+
+          notifyListeners();
+        }
       },
     );
   }

@@ -30,14 +30,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  dolphin_code_editor:
-    path: ../dolphin_code_editor
     
-  highlight: ^0.7.0
-  flutter_highlight: ^0.7.0
-
+  re_editor: ^0.1.0
+  re_highlight: ^0.0.3
+    
   provider: ^6.1.2
+
+  window_manager: ^0.3.8
+  flutter_hooks: ^0.20.5
 
 dev_dependencies:
   flutter_test:
@@ -62,8 +62,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/app/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
