@@ -1,23 +1,22 @@
+import 'dart:io';
+
 import 'package:dolphin_app/presentation/widgets/code_find.dart';
+import 'package:dolphin_app/provider/workspace_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:provider/provider.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/dart.dart';
 import 'package:re_highlight/styles/atom-one-dark.dart';
 
 class CodeEditorWidget extends HookWidget {
-  final String text;
-
   const CodeEditorWidget({
     super.key,
-    this.text = "",
   });
 
   @override
   Widget build(BuildContext context) {
-    final editingController = useCodeLineEditingController(
-      text: text,
-    );
+    final editingController = useCodeLineEditingController();
     final verticalScroller = useScrollController();
     final horizontalScroller = useScrollController();
     final scrollController = useCodeScrollController(
@@ -28,37 +27,76 @@ class CodeEditorWidget extends HookWidget {
       editingController: editingController,
     );
 
-    return CodeEditor(
-      controller: editingController,
-      scrollController: scrollController,
-      findController: findController,
-      style: CodeEditorStyle(
-        fontSize: 16,
-        codeTheme: CodeHighlightTheme(
-          languages: {'dart': CodeHighlightThemeMode(mode: langDart)},
-          theme: atomOneDarkTheme,
-        ),
-      ),
-      indicatorBuilder:
-          (context, editingController, chunkController, notifier) {
-        return Row(
-          children: [
-            DefaultCodeLineNumber(
-              controller: editingController,
-              notifier: notifier,
-            ),
-            DefaultCodeChunkIndicator(
-              width: 20,
-              controller: chunkController,
-              notifier: notifier,
-            )
-          ],
+    return Selector<WorkspaceProvider, File?>(
+      builder: (context, selector, _) {
+        print("File changed");
+        // return Center(
+        //   child: Text(selector?.path ?? ""),
+        // );
+
+        if (selector == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        return StreamBuilder<FileSystemEvent>(
+          stream: selector.watch(),
+          builder: (context, snapshot) {
+            print("Event");
+
+            return FutureBuilder<String>(
+              future: selector.readAsString(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                editingController.text = snapshot.data ?? "";
+
+                return CodeEditor(
+                  controller: editingController,
+                  scrollController: scrollController,
+                  findController: findController,
+                  style: CodeEditorStyle(
+                    fontSize: 16,
+                    codeTheme: CodeHighlightTheme(
+                      languages: {
+                        'dart': CodeHighlightThemeMode(mode: langDart)
+                      },
+                      theme: atomOneDarkTheme,
+                    ),
+                  ),
+                  indicatorBuilder:
+                      (context, editingController, chunkController, notifier) {
+                    return Row(
+                      children: [
+                        DefaultCodeLineNumber(
+                          controller: editingController,
+                          notifier: notifier,
+                        ),
+                        DefaultCodeChunkIndicator(
+                          width: 20,
+                          controller: chunkController,
+                          notifier: notifier,
+                        )
+                      ],
+                    );
+                  },
+                  findBuilder: (context, controller, readOnly) =>
+                      CodeFindPanelView(
+                    controller: controller,
+                    readOnly: readOnly,
+                  ),
+                );
+              },
+            );
+          },
         );
       },
-      findBuilder: (context, controller, readOnly) => CodeFindPanelView(
-        controller: controller,
-        readOnly: readOnly,
-      ),
+      selector: (_, provider) => provider.selectedFile,
     );
   }
 }

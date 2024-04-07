@@ -28,43 +28,53 @@ class EditorPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final entity = workspaceProvider.files[index];
 
-                    return MaterialButton(
-                      onPressed: () {
-                        // TODO: Handle open a file or folder
+                    return GestureDetector(
+                      onDoubleTap: () {
+                        if (!entity.isDirectory) {
+                          context
+                              .read<WorkspaceProvider>()
+                              .setSelectedFile(File(entity.path));
+                        }
                       },
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 30,
-                            child: entity.isDirectory
-                                ? const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    size: 18,
-                                  )
-                                : null,
-                          ),
-                          SizedBox(
-                            width: 30,
-                            child: entity.isDirectory
-                                ? const Icon(
-                                    Icons.folder_rounded,
-                                    size: 18,
-                                  )
-                                : const Icon(
-                                    Icons.description_rounded,
-                                    size: 18,
-                                  ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              entity.name,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: context.colorScheme.onSecondaryContainer,
+                      child: MaterialButton(
+                        onPressed: () {
+                          // TODO: Handle open a file or folder
+                        },
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              child: entity.isDirectory
+                                  ? const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 18,
+                                    )
+                                  : null,
+                            ),
+                            SizedBox(
+                              width: 30,
+                              child: entity.isDirectory
+                                  ? const Icon(
+                                      Icons.folder_rounded,
+                                      size: 18,
+                                    )
+                                  : const Icon(
+                                      Icons.description_rounded,
+                                      size: 18,
+                                    ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                entity.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color:
+                                      context.colorScheme.onSecondaryContainer,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -85,40 +95,8 @@ class EditorPage extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Selector<WorkspaceProvider, File?>(
-                builder: (context, selector, _) {
-                  print("File changed");
-                  // return Center(
-                  //   child: Text(selector?.path ?? ""),
-                  // );
-
-                  if (selector == null) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  return StreamBuilder<FileSystemEvent>(
-                    stream: selector.watch(),
-                    builder: (context, snapshot) => FutureBuilder<String>(
-                      future: selector.readAsString(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                    
-                        return CodeEditorWidget(
-                          text: snapshot.data ?? "",
-                        );
-                      },
-                    ),
-                  );
-                },
-                selector: (_, provider) => provider.selectedFile,
-              ),
+            const Expanded(
+              child: CodeEditorWidget(),
             ),
           ],
         ),
